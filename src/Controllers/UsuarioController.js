@@ -33,9 +33,41 @@ module.exports = {
       const usuario = await prisma.usuario.findUnique({
         where: { id: parseInt(id, 10) },
       });
-      res.json(usuario)
+      res.json(usuario);
     } catch (error) {
-      res.json(error)
+      res.json(error);
+    }
+  },
+
+  async buscarUsuarios(req, res) {
+    const usuarios = await prisma.usuario.findMany();
+    res.json(usuarios);
+  },
+
+  async atualizarUsuario(req, res) {
+    try {
+      const { id } = req.params;
+      const { nome, email } = req.body;
+
+      const usuario = await prisma.usuario.findUnique({
+        where: { id: parseInt(id) },
+      });
+
+      if(!usuario) {
+        return res.json({ error: "Usuario não existe"})
+      }
+
+      usuario = await prisma.usuario.update({
+        where: { id: parseInt(id) },
+        data: { nome, email },
+        select: {
+          nome: true,
+          email: true
+        }
+      });
+      return res.json(usuario);
+    } catch (error) {
+      res.json(error);
     }
   },
 };
