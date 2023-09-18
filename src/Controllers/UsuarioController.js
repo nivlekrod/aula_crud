@@ -22,7 +22,20 @@ module.exports = {
         res.json({ Mensagem: `Usuário Criado` });
       }
     } catch (error) {
-        res.json(error)
+      res.json(error);
+    }
+  },
+
+  async buscarUsuario(req, res) {
+    const { id } = req.params;
+
+    try {
+      const usuario = await prisma.usuario.findUnique({
+        where: { id: parseInt(id, 10) },
+      });
+      res.json(usuario)
+    } catch (error) {
+      res.json(error)
     }
   },
 };
