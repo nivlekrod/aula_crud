@@ -53,8 +53,8 @@ module.exports = {
         where: { id: parseInt(id) },
       });
 
-      if(!usuario) {
-        return res.json({ error: "Usuario não existe"})
+      if (!usuario) {
+        return res.json({ error: "Usuario não existe" });
       }
 
       usuario = await prisma.usuario.update({
@@ -62,10 +62,31 @@ module.exports = {
         data: { nome, email },
         select: {
           nome: true,
-          email: true
-        }
+          email: true,
+        },
       });
       return res.json(usuario);
+    } catch (error) {
+      res.json(error);
+    }
+  },
+
+  async deletarUsuario(req, res) {
+    try {
+      const { id } = req.params;
+
+      const usuario = await prisma.usuario.findUnique({
+        where: { id: parseInt(id) },
+      });
+
+      if (!usuario) {
+        return res.json({ error: "Usuario não existe" });
+      }
+
+      usuario = await prisma.usuario.delete({
+        where: { id: parseInt(id) },
+      });
+      return res.json("Usuario Deletado");
     } catch (error) {
       res.json(error);
     }
